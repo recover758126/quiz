@@ -1,0 +1,167 @@
+:root {
+  /* Storybook Design Tokens */
+  --sb-color-primary: #FF4785; /* brand */
+  --sb-color-secondary: #1EA7FD; /* primary button */
+  --sb-color-positive: #66BF3C;
+  --sb-color-negative: #FF2E2E;
+  --sb-color-warning: #FBD26A;
+  --sb-color-info: #1EA7FD;
+  --sb-color-darkest: #2E2E2E;
+  --sb-color-muted: #6B7280;
+  --sb-color-border: #E5E7EB;
+  --sb-app-bg: #F6F9FC;
+  --sb-card-bg: #FFFFFF;
+  --sb-shadow-1: 0 1px 3px rgba(0,0,0,0.08);
+  --sb-shadow-2: 0 2px 8px rgba(0,0,0,0.06);
+
+  /* App variables mapped to SB tokens */
+  --bg: var(--sb-app-bg);
+  --fg: var(--sb-color-darkest);
+  --muted: var(--sb-color-muted);
+  --border: var(--sb-color-border);
+  --accent: var(--sb-color-primary);
+  --accent-weak: #FFE3ED;
+  --danger: var(--sb-color-negative);
+  --danger-weak: #FFEBEE;
+  --positive-weak: #EAFBE7;
+  --card: var(--sb-card-bg);
+  --shadow: var(--sb-shadow-2);
+  --secondary: var(--sb-color-secondary);
+}
+html, body { min-height: 100%; }
+html { font-size: 26.6666666667vw; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Nunito Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.container {
+  max-width: 375px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+.h1 { font-size: 20px; font-weight: 700; margin: 12px 0; }
+.h2 { font-size: 18px; font-weight: 600; margin: 8px 0; }
+
+/* 布局与列表 */
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.list { display: flex; flex-direction: column; gap: 8px; }
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* 控件与按钮 */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 24px; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--border); background: #fff; color: var(--fg);
+  font-size: 12px;
+  transition: box-shadow .2s, transform .02s, background-color .2s, color .2s;
+}
+/* 为导航按钮提供更大的可点击区域与字体 */
+.btn.large { min-height: 40px; padding: 10px 14px; font-size: 14px; border-radius: 10px; }
+/* 导航按钮与题目卡片的距离与两端分布 */
+.nav-actions { margin-top: 16px; justify-content: space-between; width: 100%; }
+/* 按钮等宽拉伸，便于左右居中显示 */
+.nav-actions .btn { flex: 1; }
+.btn:hover { box-shadow: var(--shadow); }
+.btn:active { transform: scale(0.98); }
+.btn[disabled] { opacity: 0.5; pointer-events: none; }
+.btn.primary { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+.btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.file-btn input[type="file"] { display: none; }
+select.btn, input.btn { appearance: none; }
+select.btn { padding-right: 32px; background-image: linear-gradient(180deg,transparent 0,transparent 16px), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%236e7781"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 8px center; }
+input[type="text"] { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; background: #fff; }
+input[type="text"]:focus-visible, .btn:focus-visible, select.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* 卡片与提示 */
+.card { margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); box-shadow: var(--shadow); }
+.summary { margin-top: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--muted); }
+.explain { margin-top: 4px; color: var(--muted); }
+
+/* 选项 */
+.opt-list { margin-top: 8px; padding-left: 0; }
+.opt {
+  display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: #fff;
+}
+/* 选择态（未提交前）：蓝色高亮 */
+.opt.active { border-color: var(--secondary); background: #E9F5FF; }
+/* 漏选态（提交后）：正确但未选的项提示为浅蓝 */
+.opt.missed { border-color: var(--secondary); background: #F0F7FF; }
+.opt + .opt { margin-top: 8px; }
+/* 提交后揭示正确/错误：覆盖选择态颜色 */
+.opt.correct { border-color: var(--sb-color-positive); background: var(--positive-weak); }
+.opt.wrong { border-color: var(--danger); background: var(--danger-weak); }
+/* 已提交后禁用选项的视觉反馈 */
+.opt.disabled { opacity: 0.6; pointer-events: none; }
+/* 漏选提示图标颜色 */
+.status-icon.missed { color: var(--secondary); }
+
+.answer { margin-top: 4px; color: var(--accent); font-weight: 600; }
+/* 导航与徽标 */
+.nav { position: sticky; top: 0; z-index: 10; background: var(--bg); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; background: #eef2f6; color: var(--fg); font-size: 12px; }
+.badge + .badge { margin-left: 4px; }
+.badge.muted { background: #f3f4f6; color: var(--muted); }
+
+/* 底部标签栏 */
+.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; background: var(--card); border-top: none; box-shadow: var(--shadow); }
+.tabs-inner { max-width: 375px; margin: 0 auto; padding: 8px; display: flex; gap: 8px; }
+.tab { flex: 1; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: #fff; color: var(--fg); text-align: center; }
+.tab.active { background: var(--accent-weak); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 题库项三行布局 */
+.bank-item { padding: 8px; }
+.bank-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+.btn.info { background: var(--sb-color-info); color: #fff; border-color: var(--sb-color-info); }
+.btn.success { background: var(--sb-color-positive); color: #fff; border-color: var(--sb-color-positive); }
+.btn.warning { background: var(--sb-color-warning); color: #2E2E2E; border-color: var(--sb-color-warning); }
+.status-icon { margin-left: auto; font-weight: 700; }
+.status-icon.correct { color: var(--sb-color-positive); }
+.status-icon.wrong { color: var(--sb-color-negative); }
+/* 新增：漏选态图标颜色 */
+.status-icon.missed { color: var(--sb-color-warning); }
+
+/* Dropdown menu (lightweight) */
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  padding: 6px;
+  z-index: 20;
+  min-width: 160px;
+}
+
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: #f7f8fa;
+}
+
+.dropdown-item.danger {
+  color: #d92d20; /* subtle danger */
+}
+
+.dropdown-item.danger:hover {
+  background: #fee4e2;
+}
