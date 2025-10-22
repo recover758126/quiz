@@ -11,9 +11,12 @@ function removeLegacyScripts(html) {
 }
 
 function main() {
-  const file = resolve('dist/index.html');
+  // Prefer docs/index.html, fallback to dist/index.html for backward compatibility
+  const docsFile = resolve('docs/index.html');
+  const distFile = resolve('dist/index.html');
+  const file = existsSync(docsFile) ? docsFile : distFile;
   if (!existsSync(file)) {
-    console.error('[postprocess] dist/index.html not found. Did you run `vite build`?');
+    console.error('[postprocess] index.html not found in docs/ or dist/. Did you run `vite build`?');
     process.exit(1);
   }
   const html = readFileSync(file, 'utf8');
@@ -21,7 +24,7 @@ function main() {
   if (cleaned === html) {
     console.log('[postprocess] No legacy script tags found or already removed.');
   } else {
-    console.log('[postprocess] Removed legacy script tags from dist/index.html');
+    console.log(`[postprocess] Removed legacy script tags from ${file}`);
     writeFileSync(file, cleaned, 'utf8');
   }
 }

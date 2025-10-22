@@ -18,4 +18,7 @@ export default defineConfig({
     port: 5174,
     open: false,
   },
+  build: {
+    outDir: 'docs',
+  },
 })
