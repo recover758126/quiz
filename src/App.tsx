@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { normalizeAnswer } from './utils';
 import { FiInfo } from 'react-icons/fi';
 import { Routes, Route, Link, useLocation, useNavigate, useParams, Navigate } from 'react-router-dom';
+import { pickQuestionsByConfig as pickQuestionsByConfigExternal } from './selection';
 
 function Importer({ onLoaded }: { onLoaded: (bankId: string, sheetName: string, questions: Question[]) => void }) {
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -281,69 +282,7 @@ function BankManager({ onOpen }: { onOpen: (bankId: string) => void }) {
     return Math.max(0, Math.min(100, n));
   }
   function pickQuestionsByConfig(questions: Question[], history: History, total: number, r: { single: number; multi: number; boolean: number; text: number }): string[] {
-    const types: Array<'single' | 'multi' | 'boolean' | 'text'> = ['single', 'multi', 'boolean', 'text'];
-    const byType: Record<string, Question[]> = { single: [], multi: [], boolean: [], text: [] };
-    for (const q of questions) byType[q.type].push(q);
-    const counts: Record<string, number> = {} as any;
-    const sum = r.single + r.multi + r.boolean + r.text;
-    const totalUse = Math.min(total, questions.length);
-    if (sum <= 0) {
-      const per = Math.floor(totalUse / types.length);
-      counts.single = per; counts.multi = per; counts.boolean = per; counts.text = totalUse - per * 3;
-    } else {
-      const raw = {
-        single: (r.single / sum) * totalUse,
-        multi: (r.multi / sum) * totalUse,
-        boolean: (r.boolean / sum) * totalUse,
-        text: (r.text / sum) * totalUse,
-      };
-      counts.single = Math.floor(raw.single);
-      counts.multi = Math.floor(raw.multi);
-      counts.boolean = Math.floor(raw.boolean);
-      counts.text = Math.floor(raw.text);
-      let remain = totalUse - (counts.single + counts.multi + counts.boolean + counts.text);
-      // 将剩余分配给占比最大的类型，依次分配
-      const order = Object.entries(raw).sort((a, b) => b[1] - a[1]).map(([k]) => k);
-      for (let i = 0; i < order.length && remain > 0; i++) { counts[order[i]]++; remain--; }
-    }
-    const priority = (q: Question) => {
-      const h = history[q.id];
-      if (!h || !h.answered) return 2; // 未做过优先（第二优先）
-      return h.everWrong ? 3 : 0; // 错题最高，其次未做，最后做对
-    };
-    const shuffle = <T,>(arr: T[]) => {
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    };
-    const bucketize = (arr: Question[]) => {
-      const wrong: Question[] = []; const unseen: Question[] = []; const correct: Question[] = [];
-      for (const q of arr) {
-        const p = priority(q);
-        if (p === 3) wrong.push(q); else if (p === 2) unseen.push(q); else correct.push(q);
-      }
-      return { wrong: shuffle(wrong), unseen: shuffle(unseen), correct: shuffle(correct) };
-    };
-    const pick: Question[] = [];
-    for (const t of types) {
-      const take = counts[t] || 0;
-      const { wrong, unseen, correct } = bucketize(byType[t]);
-      const seq = [...wrong, ...unseen, ...correct];
-      pick.push(...seq.slice(0, take));
-    }
-    // 不足则全局按优先级补足（同优先级内随机）
-    const need = totalUse - pick.length;
-    if (need > 0) {
-      const selectedSet = new Set(pick.map(q => q.id));
-      const rest = questions.filter(q => !selectedSet.has(q.id));
-      const { wrong, unseen, correct } = bucketize(rest);
-      const seq = [...wrong, ...unseen, ...correct];
-      pick.push(...seq.slice(0, need));
-    }
-    return pick.map(q => q.id);
+    return pickQuestionsByConfigExternal(questions, history, total, r);
   }
 }
 
