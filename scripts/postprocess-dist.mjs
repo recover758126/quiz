@@ -11,12 +11,12 @@ function removeLegacyScripts(html) {
 }
 
 function main() {
-  // Prefer docs/index.html, fallback to dist/index.html for backward compatibility
-  const docsFile = resolve('docs/index.html');
+  // Prefer dist/index.html, fallback to docs/index.html for backward compatibility
   const distFile = resolve('dist/index.html');
-  const file = existsSync(docsFile) ? docsFile : distFile;
+  const docsFile = resolve('docs/index.html');
+  const file = existsSync(distFile) ? distFile : docsFile;
   if (!existsSync(file)) {
-    console.error('[postprocess] index.html not found in docs/ or dist/. Did you run `vite build`?');
+    console.error('[postprocess] index.html not found in dist/ or docs/. Did you run `vite build`?');
     process.exit(1);
   }
   const html = readFileSync(file, 'utf8');
