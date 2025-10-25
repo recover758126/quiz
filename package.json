@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "build": "vite build",
+    "generate:icons": "node scripts/generate-icons.mjs",
+    "build": "npm run generate:icons && vite build",
     "dev": "vite",
     "preview": "vite preview --outDir dist"
   },
@@ -20,8 +21,10 @@
     "@vitejs/plugin-react": "^4.7.0",
     "esbuild": "^0.23.0",
     "postcss-pxtorem": "^6.1.0",
+    "sharp": "^0.34.4",
     "typescript": "^5.6.2",
     "vite": "^5.4.21",
+    "vite-plugin-pwa": "^1.1.0",
     "vite-plugin-singlefile": "^2.3.0",
     "vitest": "^2.1.5"
   },
