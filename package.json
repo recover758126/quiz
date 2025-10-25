@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "build": "vite build && node scripts/postprocess-dist.mjs",
+    "build": "vite build",
     "dev": "vite",
     "preview": "vite preview --outDir docs"
   },
